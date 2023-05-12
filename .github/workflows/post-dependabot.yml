@@ -11,37 +11,7 @@ jobs:
   template-oss:
     name: template-oss
     if: github.repository_owner == 'npm' && github.actor == 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Setup Git User
-        run: |
-          git config --global user.email "npm-cli+bot@github.com"
-          git config --global user.name "npm CLI robot"
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - name: Install npm@latest
-        run: npm i --prefer-online --no-fund --no-audit -g npm@latest
-      - name: npm Version
-        run: npm -v
-      - name: Install Dependencies
-        run: npm i --ignore-scripts --no-audit --no-fund
-      - name: Fetch Dependabot Metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Dependabot can update multiple directories so we output which directory
-      # it is acting on so we can run the command for the correct root or workspace
       - name: Get Dependabot Directory
         if: contains(steps.metadata.outputs.dependency-names, '@npmcli/template-oss')
         id: flags
